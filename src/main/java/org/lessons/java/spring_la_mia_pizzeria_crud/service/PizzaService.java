@@ -26,7 +26,11 @@ public class PizzaService {
   }
 
   // SHOW
-  public Pizza findById(Integer id){
+  public Optional<Pizza> findById(Integer id){
+    return pizzaRepository.findById(id);
+  }
+
+  public Pizza getById(Integer id){
     Optional<Pizza> pizzaAttempt = pizzaRepository.findById(id);
 
     // Se non esiste un oggetto pizza con quell'id

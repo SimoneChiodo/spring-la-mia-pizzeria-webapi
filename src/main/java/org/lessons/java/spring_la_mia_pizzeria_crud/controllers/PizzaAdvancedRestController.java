@@ -1,10 +1,12 @@
 package org.lessons.java.spring_la_mia_pizzeria_crud.controllers;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.lessons.java.spring_la_mia_pizzeria_crud.model.Pizza;
 import org.lessons.java.spring_la_mia_pizzeria_crud.service.PizzaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping("/api/pizza")
+@RequestMapping("/api/v2/pizza")
 public class PizzaAdvancedRestController {
   
   @Autowired
@@ -33,9 +35,14 @@ public class PizzaAdvancedRestController {
 
   // SHOW
   @GetMapping("/{id}")
-  public ResponseEntity show(@PathVariable("id") Integer id) {
-    Pizza pizza = pizzaService.findById(id);
-    return pizza;
+  public ResponseEntity<Pizza> show(@PathVariable("id") Integer id) {
+    Optional<Pizza> pizzaAttempt = pizzaService.findById(id);
+
+    // Se non esiste un oggetto pizza con quell'id
+    if(pizzaAttempt.isEmpty())
+      return new ResponseEntity<Pizza>(HttpStatus.NOT_FOUND); // Restituisco un errore 404
+
+    return new ResponseEntity<Pizza>(pizzaAttempt.get(), HttpStatus.OK); // Restituisco la pizza
   }
   
   // SEARCH
@@ -47,21 +54,26 @@ public class PizzaAdvancedRestController {
   
   // STORE
   @PostMapping("/create")
-  public Pizza store(@RequestBody Pizza pizza) {
-    return pizzaService.create(pizza);
+  public ResponseEntity<Pizza> store(@RequestBody Pizza pizza) {
+    return new ResponseEntity<Pizza>(pizzaService.create(pizza), HttpStatus.OK); 
   }
   
   // UPDATE
   @PutMapping("/edit/{id}")
-  public Pizza update(@RequestBody Pizza pizza, @PathVariable Integer id) {
+  public ResponseEntity<Pizza> update(@RequestBody Pizza pizza, @PathVariable Integer id) {
+    // Se non esiste un oggetto pizza con quell'id
+    if(pizzaService.findById(id).isEmpty())
+      return new ResponseEntity<Pizza>(HttpStatus.NOT_FOUND); // Restituisco un errore 404  
+    
     pizza.setId(id); // Imposto l'id della pizza che voglio aggiornare
-    return pizzaService.update(pizza); // Restituisco la pizza aggiornata
+    return new ResponseEntity<Pizza>(pizzaService.update(pizza), HttpStatus.OK); 
   }
   
   // DELETE
   @DeleteMapping("/delete/{id}")
-  public void delete(@PathVariable Integer id) {
+  public ResponseEntity<Pizza> delete(@PathVariable Integer id) {
     pizzaService.deleteById(id);
+    return new ResponseEntity<Pizza>(HttpStatus.OK);
   }
 
 }

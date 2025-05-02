@@ -44,7 +44,7 @@ public class PizzaController {
   // SHOW
   @GetMapping("/{id}")
   public String show(@PathVariable("id") Integer id, Model model) {
-    Pizza pizza = pizzaService.findById(id); 
+    Pizza pizza = pizzaService.getById(id); 
     
     model.addAttribute("pizza", pizza);
 
@@ -93,7 +93,7 @@ public class PizzaController {
   // EDIT
   @GetMapping("/edit/{id}")
   public String edit(@PathVariable Integer id, Model model) {
-    Pizza pizza = pizzaService.findById(id); 
+    Pizza pizza = pizzaService.getById(id); 
 
     model.addAttribute("pizza", pizza);
 
@@ -121,7 +121,7 @@ public class PizzaController {
   // DELETE
   @PostMapping("/delete/{id}")
   public String delete(@PathVariable Integer id) {
-    Pizza pizza = pizzaService.findById(id);
+    Pizza pizza = pizzaService.getById(id);
 
     pizzaService.delete(pizza); 
 
@@ -132,7 +132,7 @@ public class PizzaController {
   @GetMapping("/{id}/discount")
   public String sconto(@PathVariable Integer id, Model model) {
     Discount sconto = new Discount(); // Creo un nuovo oggetto sconto
-    Pizza pizza = pizzaService.findById(id); 
+    Pizza pizza = pizzaService.getById(id); 
     sconto.setPizza(pizza); // Associo la pizza allo sconto
 
     model.addAttribute("sconto", sconto); // Aggiungo lo sconto al model

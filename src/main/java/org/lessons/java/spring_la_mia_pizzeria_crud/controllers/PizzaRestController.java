@@ -33,7 +33,7 @@ public class PizzaRestController {
   // SHOW
   @GetMapping("/{id}")
   public Pizza show(@PathVariable("id") Integer id) {
-    Pizza pizza = pizzaService.findById(id);
+    Pizza pizza = pizzaService.getById(id);
     return pizza;
   }
   
