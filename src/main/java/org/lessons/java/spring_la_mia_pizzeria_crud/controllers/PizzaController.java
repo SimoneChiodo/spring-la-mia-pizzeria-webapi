@@ -9,9 +9,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.lessons.java.spring_la_mia_pizzeria_crud.repository.DiscountRepository;
+// import org.lessons.java.spring_la_mia_pizzeria_crud.repository.DiscountRepository;
 import org.lessons.java.spring_la_mia_pizzeria_crud.repository.IngredientRepository;
 import org.lessons.java.spring_la_mia_pizzeria_crud.repository.PizzaRepository;
+import org.lessons.java.spring_la_mia_pizzeria_crud.service.PizzaService;
 import org.lessons.java.spring_la_mia_pizzeria_crud.model.Discount;
 import org.lessons.java.spring_la_mia_pizzeria_crud.model.Ingredient;
 import org.lessons.java.spring_la_mia_pizzeria_crud.model.Pizza;
@@ -24,11 +25,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 @RequestMapping("/")
 public class PizzaController {
   
+  // @Autowired
+  // private PizzaRepository repository;
   @Autowired
-  private PizzaRepository repository;
+  private PizzaService pizzaService;
 
-  @Autowired
-  private DiscountRepository discountRepository;
+  // @Autowired
+  // private DiscountRepository discountRepository;
 
   @Autowired
   private IngredientRepository ingredientRepository;
@@ -42,7 +45,7 @@ public class PizzaController {
   // GET
   @GetMapping("/pizza")
   public String pizza(Model model) {
-    List<Pizza> pizze = repository.findAll(); // SELECT * FROM 'pizze' => lista di oggetti di tipo Pizza
+    List<Pizza> pizze = pizzaService.findAll(); // SELECT * FROM 'pizze' => lista di oggetti di tipo Pizza
 
     model.addAttribute("pizze", pizze);
 
@@ -52,7 +55,7 @@ public class PizzaController {
   // SHOW
   @GetMapping("/pizza/{id}")
   public String show(@PathVariable("id") Integer id, Model model) {
-    Pizza pizza = repository.findById(id).get(); // SELECT * FROM 'pizze' WHERE id = ?
+    Pizza pizza = pizzaService.findById(id); 
     
     model.addAttribute("pizza", pizza);
 
@@ -62,7 +65,7 @@ public class PizzaController {
   // SEARCH
   @GetMapping("/pizza/search")
   public String search(@RequestParam(name = "title") String title, Model model) {
-    List<Pizza> pizze = repository.findByNomeContainingIgnoreCase(title); // SELECT * FROM 'pizze' WHERE nome LIKE '%title%'
+    List<Pizza> pizze = pizzaService.findByTitle(title); 
     
     model.addAttribute("pizze", pizze);
 
@@ -93,7 +96,7 @@ public class PizzaController {
     }
 
     // Se non ci sono errori, salvo la pizza nel DB
-    repository.save(formPizza); // INSERT INTO 'pizze' (nome, descrizione, urlImmagine, prezzo) VALUES (?, ?, ?, ?)
+    pizzaService.create(formPizza); 
 
     return "redirect:/pizza"; //Ritorno alla index
   }
@@ -101,7 +104,7 @@ public class PizzaController {
   // EDIT
   @GetMapping("/pizza/edit/{id}")
   public String edit(@PathVariable Integer id, Model model) {
-    Pizza pizza = repository.findById(id).get(); // SELECT * FROM 'pizze' WHERE id = ?
+    Pizza pizza = pizzaService.findById(id); 
 
     model.addAttribute("pizza", pizza);
 
@@ -120,7 +123,7 @@ public class PizzaController {
     }
     
     // Se non ci sono errori, aggiorno la pizza nel DB
-    repository.save(formPizza); // INSERT INTO 'pizze' (nome, descrizione, urlImmagine, prezzo) VALUES (?, ?, ?, ?)
+    pizzaService.update(formPizza); 
 
     //Ritorno alla pagina della pizza modificata
     return "redirect:/pizza/" + formPizza.getId(); 
@@ -129,14 +132,14 @@ public class PizzaController {
   // DELETE
   @PostMapping("/pizza/delete/{id}")
   public String delete(@PathVariable Integer id) {
-    Pizza pizza = repository.findById(id).get(); // SELECT * FROM 'pizze' WHERE id = ?
+    Pizza pizza = pizzaService.findById(id);
 
     // Elimino tutti gli sconti associati alla pizza // <-- Non serve perché dentro Pizza.java ho definito la relazione "OneToMany" con "CascadeType.REMOVE"
     // for(Discount sconto : pizza.getSconti()) { // SELECT * FROM 'sconti' WHERE pizza_id = ?
     //   discountRepository.delete(sconto); // DELETE FROM 'sconti' WHERE id = ?
     // }
 
-    repository.delete(pizza); // DELETE FROM 'pizze' WHERE id = ?
+    pizzaService.delete(pizza); // DELETE FROM 'pizze' WHERE id = ?
 
     return "redirect:/pizza"; //Ritorno alla index
   }
@@ -145,7 +148,7 @@ public class PizzaController {
   @GetMapping("/pizza/{id}/discount")
   public String sconto(@PathVariable Integer id, Model model) {
     Discount sconto = new Discount(); // Creo un nuovo oggetto sconto
-    Pizza pizza = repository.findById(id).get(); // SELECT * FROM 'pizze' WHERE id = ?
+    Pizza pizza = pizzaService.findById(id); 
     sconto.setPizza(pizza); // Associo la pizza allo sconto
 
     model.addAttribute("sconto", sconto); // Aggiungo lo sconto al model
