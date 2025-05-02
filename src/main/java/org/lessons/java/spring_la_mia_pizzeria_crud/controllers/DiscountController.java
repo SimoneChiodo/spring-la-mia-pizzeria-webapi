@@ -1,7 +1,7 @@
 package org.lessons.java.spring_la_mia_pizzeria_crud.controllers;
 
 import org.lessons.java.spring_la_mia_pizzeria_crud.model.Discount;
-import org.lessons.java.spring_la_mia_pizzeria_crud.repository.DiscountRepository;
+import org.lessons.java.spring_la_mia_pizzeria_crud.service.DiscountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,7 +23,7 @@ public class DiscountController {
 
   //Repository
   @Autowired
-  private DiscountRepository discountRepository;
+  private DiscountService discountService;
 
 
   // STORE
@@ -35,7 +35,7 @@ public class DiscountController {
           return "discount/create";
       }
 
-      discountRepository.save(sconto); // INSERT INTO 'sconti' (nome, dataInizio, dataFine) VALUES (?, ?, ?)
+      discountService.create(sconto);
 
       return "redirect:/pizza/" + sconto.getPizza().getId(); // Redirect alla pagina della pizza associata allo sconto
   }
@@ -43,7 +43,7 @@ public class DiscountController {
   // EDIT
   @GetMapping("/edit/{id}")
   public String edit(@PathVariable Integer id, Model model) {
-      Discount sconto = discountRepository.findById(id).orElse(null);
+      Discount sconto = discountService.findById(id);
 
       // Redirect a una pagina di errore se lo sconto non esiste
       if (sconto == null) {
@@ -63,7 +63,7 @@ public class DiscountController {
     }
 
     // Salva le modifiche nel repository
-    discountRepository.save(formSconto); // UPDATE 'sconti' SET nome=?, dataInizio=?, dataFine=? WHERE id=?
+    discountService.update(formSconto); 
 
     // Redirect alla pagina della pizza associata allo sconto
     return "redirect:/pizza/" + formSconto.getPizza().getId(); 
@@ -72,9 +72,9 @@ public class DiscountController {
   // DELETE
   @PostMapping("/delete/{id}")
   public String delete(@PathVariable Integer id) {
-    Discount sconto = discountRepository.findById(id).get(); // SELECT * FROM 'sconti' WHERE id = ?
+    Discount sconto = discountService.findById(id); 
 
-    discountRepository.delete(sconto); // DELETE FROM 'sconti' WHERE id = ?
+    discountService.delete(sconto); 
 
     // Redirect alla pagina della pizza associata allo sconto
     return "redirect:/pizza/" + sconto.getPizza().getId(); 
