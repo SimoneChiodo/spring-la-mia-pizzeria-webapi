@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ingredient</title>
+
+    <!-- IMPORT CSS -->
+    <th:block th:replace="~{fragments/fragments :: import-css}"></th:block>
+  </head>
+  <body>
+    <!-- HEADER -->
+    <header>
+      <th:block
+        th:replace="~{fragments/fragments :: navbar('ingredienti')}"
+      ></th:block>
+    </header>
+
+    <main>
+      <div class="container">
+        <h1>Ingredienti</h1>
+
+        <div class="w-100 text-center">
+          <a
+            th:href="@{/ingredient/create}"
+            class="btn btn-outline-success my-3"
+            >+ Crea un nuovo ingrediente</a
+          >
+        </div>
+
+        <!-- Filter Form -->
+        <form
+          class="p-4 border light-shadow rounded-5 mb-4"
+          th:action=@{/ingredient/search}
+          method="GET"
+        >
+          <div class="mb-3">
+            <label for="input" class="form-label">Cerca per nome</label>
+            <input type="text" class="form-control" id="input" name="nome" />
+          </div>
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+
+        <!-- Table -->
+        <table
+          class="table table-striped table-hover"
+          th:if="${ingredients.size() > 0}"
+        >
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Nome</th>
+              <th scope="col">Number of pizzas</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="ingredient : ${ingredients}" th:object="${ingredient}">
+              <th scope="row">[[*{id}]]</th>
+              <td>[[*{nome}]]</td>
+              <td>[[*{pizze.size()}]]</td>
+              <td>
+                <a
+                  th:href="@{/ingredient/edit/{id}(id=${ingredient.id})}"
+                  class="btn btn-warning btn-sm m-1"
+                >
+                  <i class="fa-solid fa-pencil"></i>
+                </a>
+                <!-- Il pulsante DELETE apre una modal di conferma -->
+                <button
+                  type="button"
+                  class="btn btn-danger btn-sm m-1"
+                  data-bs-toggle="modal"
+                  th:data-bs-target="'#delete-modal-' + ${ingredient.id}"
+                >
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+                <!-- Delete Modal -->
+                <div
+                  class="modal fade"
+                  th:id="'delete-modal-' + ${ingredient.id}"
+                  tabindex="-1"
+                  aria-labelledby="exampleModalLabel"
+                  aria-hidden="true"
+                  th:object="${ingredient}"
+                >
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <!-- Modal Header -->
+                      <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">
+                          Eliminazione di [[*{nome}]]
+                        </h1>
+                      </div>
+                      <!-- Modal Body -->
+                      <div class="modal-body">
+                        Sei sicuro di voler eliminare [[*{nome}]]
+                      </div>
+                      <!-- Modal Footer -->
+                      <div class="modal-footer">
+                        <!-- Delete e' una chiamata POST, quindi necessita di un form -->
+                        <form
+                          th:action="@{/ingredient/delete/{id}(id=${ingredient.id})}"
+                          method="POST"
+                        >
+                          <button class="btn btn-danger" type="submit">
+                            ELIMINA
+                          </button>
+                        </form>
+                        <button
+                          type="button"
+                          class="btn btn-secondary"
+                          data-bs-dismiss="modal"
+                        >
+                          No
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div th:unless="${ingredients.size() > 0}">
+          <h2>Non ci sono ingredienti disponibili</h2>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

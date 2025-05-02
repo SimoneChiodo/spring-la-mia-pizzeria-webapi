@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create</title>
+
+    <!-- IMPORT CSS -->
+    <th:block th:replace="~{fragments/fragments :: import-css}"></th:block>
+  </head>
+  <body>
+    <!-- HEADER -->
+    <header>
+      <th:block
+        th:replace="~{fragments/fragments :: navbar('creaPizza')}"
+      ></th:block>
+    </header>
+
+    <!-- MAIN -->
+    <main>
+      <div class="container">
+        <h1>Pizza Create</h1>
+
+        <!-- Create Form -->
+        <form
+          class="row p-4 border light-shadow rounded-5 mb-4 position-relative"
+          action=@{/pizza/create}
+          method="POST"
+          th:object="${pizza}"
+        >
+          <!-- ERRORI -->
+          <!-- <div class="mb-3 alert alert-danger" th:if="${#fields.hasErrors()}">
+          <h3>Errori:</h3>
+          <ul class="">
+              <li
+              th:each="error : ${#fields.allErrors()}"
+              th:text="${error}"
+              ></li>
+            </ul>
+          </div> -->
+
+          <!-- Nome -->
+          <div class="col col-12 mb-3">
+            <label for="input1" class="form-label">Inserisci il nome</label>
+            <input
+              id="input1"
+              class="form-control"
+              type="text"
+              name="nome"
+              th:field="*{nome}"
+              th:errorClass="is-invalid"
+            />
+            <div class="invalid-feedback">
+              <ul>
+                <li
+                  th:each="error : ${#fields.errors('nome')}"
+                  th:text="${error}"
+                ></li>
+              </ul>
+            </div>
+          </div>
+          <!-- Descrizione -->
+          <div class="col col-12 mb-3">
+            <label for="input2" class="form-label"
+              >Inserisci la descrizione</label
+            >
+            <textarea
+              id="input2"
+              class="form-control"
+              type="text"
+              name="descrizione"
+              rows="2"
+              th:field="*{descrizione}"
+              th:errorClass="is-invalid"
+            ></textarea>
+            <div class="invalid-feedback">
+              <ul>
+                <li
+                  th:each="error : ${#fields.errors('descrizione')}"
+                  th:text="${error}"
+                ></li>
+              </ul>
+            </div>
+          </div>
+          <!-- Immagine -->
+          <div class="col col-6 mb-3">
+            <label for="input3" class="form-label"
+              >Inserisci il percorso dell'immagine</label
+            >
+            <input
+              id="input3"
+              class="form-control"
+              type="text"
+              name="urlImmagine"
+              th:field="*{urlImmagine}"
+              th:errorClass="is-invalid"
+            />
+            <div class="invalid-feedback">
+              <ul>
+                <li
+                  th:each="error : ${#fields.errors('urlImmagine')}"
+                  th:text="${error}"
+                ></li>
+              </ul>
+            </div>
+          </div>
+          <!-- Prezzo -->
+          <div class="col col-6 mb-3">
+            <label for="input4" class="form-label">Inserisci il prezzo</label>
+            <input
+              id="input4"
+              class="form-control"
+              type="number"
+              step="0.01"
+              name="prezzo"
+              th:field="*{prezzo}"
+              th:errorClass="is-invalid"
+            />
+            <div class="invalid-feedback">
+              <ul>
+                <li
+                  th:each="error : ${#fields.errors('prezzo')}"
+                  th:text="${error}"
+                ></li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Seleziona Ingredienti -->
+          <div class="col col-12 mb-3">
+            <div class="form-check" th:each="ingredient : ${ingredienti}">
+              <input
+                th:class="'input-' + ${ingredient.id}"
+                type="checkbox"
+                th:name=${ingredient.nome}
+                th:id="'ingredient-' + ${ingredient.id}"
+                th:value="${ingredient.id}"
+                th:field="${pizza.ingredienti}"
+                />
+                <label th:for="'input-' + ${ingredient.id}" class="form-check-label" th:text="${ingredient.nome}"></label>
+            </div>
+          </div>
+
+          <!-- SUBMIT -->
+          <div class="col col-12 d-flex justify-content-between">
+            <button type="submit" class="btn btn-primary">Create</button>
+            <button type="reset" class="btn btn-warning">Reset</button>
+          </div>
+        </form>
+      </div>
+    </main>
+  </body>
+</html>

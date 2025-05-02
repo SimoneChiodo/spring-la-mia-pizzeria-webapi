@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create</title>
+
+    <!-- IMPORT CSS -->
+    <th:block th:replace="~{fragments/fragments :: import-css}"></th:block>
+  </head>
+  <body>
+    <!-- HEADER -->
+    <header>
+      <th:block
+        th:replace="~{fragments/fragments :: navbar('creaIngrediente')}"
+      ></th:block>
+    </header>
+
+    <!-- MAIN -->
+    <main>
+      <div class="container">
+        <h1
+          th:text="${create} ? 'Ingredient create' : 'Ingredient update'"
+        ></h1>
+
+        <!-- Create Form -->
+        <form
+          class="row p-4 border light-shadow rounded-5 mb-4 position-relative"
+          th:action="${create} ? @{|/ingredient/create|} : @{/ingredient/edit/{id}(id=${ingredient.id})}"
+          method="POST"
+          th:object="${ingredient}"
+        >
+          <!-- Nome -->
+          <div class="col col-12 mb-3">
+            <label for="input1" class="form-label">Inserisci il nome</label>
+            <input
+              id="input1"
+              class="form-control"
+              type="text"
+              name="nome"
+              th:field="*{nome}"
+              th:errorClass="is-invalid"
+            />
+            <div class="invalid-feedback">
+              <ul>
+                <li
+                  th:each="error : ${#fields.errors('nome')}"
+                  th:text="${error}"
+                ></li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- SUBMIT -->
+          <div class="col col-12 d-flex justify-content-between">
+            <button
+              type="submit"
+              class="btn btn-primary"
+              th:text="${create} ? 'Create' : 'Update'"
+            ></button>
+            <button type="reset" class="btn btn-warning">Reset</button>
+          </div>
+        </form>
+      </div>
+    </main>
+  </body>
+</html>

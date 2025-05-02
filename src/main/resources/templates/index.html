@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home</title>
+
+    <!-- IMPORT CSS -->
+    <th:block th:replace="~{fragments/fragments :: import-css}"></th:block>
+  </head>
+  <body>
+    <!-- HEADER -->
+    <header>
+      <th:block
+        th:replace="~{fragments/fragments :: navbar('home')}"
+      ></th:block>
+    </header>
+
+    <!-- MAIN -->
+    <main>
+      <div class="container mb-5">
+        <h1>Home</h1>
+
+        <h2 class="text-center underline">Benvenuto nel mio sito!</h2>
+        <img
+          id="home-jumbo"
+          th:src="@{/img/HomeJumbo.webp}"
+          alt="Pizza"
+          draggable="false"
+        />
+      </div>
+    </main>
+  </body>
+</html>

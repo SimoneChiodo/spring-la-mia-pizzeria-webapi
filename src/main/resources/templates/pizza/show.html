@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Show</title>
+
+    <!-- IMPORT CSS -->
+    <th:block th:replace="~{fragments/fragments :: import-css}"></th:block>
+  </head>
+  <body>
+    <!-- HEADER -->
+    <header>
+      <th:block
+        th:replace="~{fragments/fragments :: navbar('none')}"
+      ></th:block>
+    </header>
+
+    <!-- MAIN -->
+    <main>
+      <div class="container">
+        <div class="d-flex align-items-center mb-4">
+          <h1 class="me-2">Pizza Details</h1>
+          <!-- Edit Button -->
+          <a
+          th:href="@{/pizza/edit/{id}(id=${pizza.id})}"
+          class="btn btn-primary"
+          >
+            <i class="fa-solid fa-pencil"></i>
+          </a>
+        </div>
+
+        <div th:if="${pizza != null}" th:object="${pizza}">
+          <!-- Table -->
+          <div
+            class="row pizza-detail-container light-shadow border rounded-5 p-3 mb-4"
+          >
+            <div class="col col-7 left-side">
+              <ul class="reset-ul">
+                <li>
+                  <h3 scope="col">ID:</h3>
+                  <span class="fs-4">[[*{id}]]</span>
+                </li>
+                <li>
+                  <h3 scope="col">Nome:</h3>
+                  <span class="fs-4">[[*{nome}]]</span>
+                </li>
+                <li>
+                  <h3 scope="col">Descrizione:</h3>
+                  <span class="fs-4">[[*{descrizione}]]</span>
+                </li>
+                <li>
+                  <h3 scope="col">Prezzo:</h3>
+                  <span class="fs-4">[[*{prezzo}]]€</span>
+                </li>
+                <li>
+                  <h3 scope="col">Ingredienti:</h3>
+                  <ul class="reset-ul">
+                    <li class="m-0" th:each="ingredient : ${pizza.ingredienti}" th:object="${ingredient}">
+                      <span class="fs-4" th:text="'- ' + *{nome}"></span>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+            <div class="col pizza-image-container col-5 right-side">
+              <img
+                th:src="*{urlImmagine}"
+                alt="pizza image"
+                class="rounded-3 pizza-image"
+              />
+            </div>
+          </div>
+
+          <!-- Discounts -->
+          <div
+            class="pizza-detail-container light-shadow border rounded-5 p-4 mb-5"
+            th:if="${pizza.getSconti().size() > 0}"
+          >
+            <h2>Sconti:</h2>
+            <div class="light-shadow border rounded-2 p-3 bg-light d-flex mb-4" th:each="sconto : *{sconti}" th:object="${sconto}">
+              <!-- Dati -->
+              <div class="row flex-grow-1">
+                <div class="col col-12">
+                  <b class="fs-4">ID:</b> [[*{id}]]  
+                </div>
+                <div class="col col-12"><b class="fs-5">Nome:</b> [[*{nome}]]</div>
+                <div class="col col-6"><b class="fs-5">Data inizio:</b> [[*{dataInizio}]]</div>
+                <div class="col col-6"><b class="fs-5">Data fine:</b> [[*{dataFine}]]</div>
+              </div>
+              <!-- Pulsanti -->
+              <div>
+                  <!-- Pulsante Modifica -->
+                  <a th:href=@{/discount/edit/{id}(id=*{id})} class="btn btn-warning btn-sm m-1">
+                    <i class="fa-solid fa-pencil"></i>
+                  </a>
+                  <!-- Il pulsante DELETE apre una modal di conferma -->
+                  <button
+                    type="button"
+                    class="btn btn-danger btn-sm m-1"
+                    data-bs-toggle="modal"
+                    th:data-bs-target="'#delete-modal-' + *{id}"
+                  >
+                    <i class="fa-solid fa-trash"></i>
+                  </button>
+                  <!-- Delete Modal -->
+                  <div
+                    class="modal fade"
+                    th:id="'delete-modal-' + *{id}"
+                    tabindex="-1"
+                    aria-labelledby="exampleModalLabel"
+                    aria-hidden="true"
+                  >
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                          <h1 class="modal-title fs-5" id="exampleModalLabel">
+                            Eliminazione di [[*{nome}]]
+                          </h1>
+                        </div>
+                        <!-- Modal Body -->
+                        <div class="modal-body">
+                          Sei sicuro di voler eliminare [[*{nome}]]
+                        </div>
+                        <!-- Modal Footer -->
+                        <div class="modal-footer">
+                          <!-- Delete e' una chiamata POST, quindi necessita di un form -->
+                          <form
+                            th:action=@{/discount/delete/{id}(id=*{id})}
+                            method="POST"
+                          >
+                            <button class="btn btn-danger" type="submit">
+                              ELIMINA
+                            </button>
+                          </form>
+                          <button
+                            type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal"
+                          >
+                            No
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+            </div>
+            
+            <div class="w-100 text-center">
+              <a
+              th:href=@{/pizza/{id}/discount(id=${pizza.id})}
+              class="btn btn-outline-success"
+              >
+                <h3>+ Crea un nuovo sconto</h3>
+              </a>
+            </div>
+          </div>
+          
+          <!-- No discount available -->
+          <div
+            class="pizza-detail-container light-shadow border rounded-5 p-4 mb-5"
+            th:unless="${pizza.getSconti().size() > 0}"
+          >
+            <h2>Sconti:</h2>
+            <h2 class="text-center">Questa pizza non ha sconti!</h2>
+        </div>
+
+        <div th:unless="${pizza != null}" class="mb-5">
+          <h2>Non ci sono pizze disponibili</h2>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
