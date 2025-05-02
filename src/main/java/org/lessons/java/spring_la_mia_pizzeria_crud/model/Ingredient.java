@@ -2,6 +2,8 @@ package org.lessons.java.spring_la_mia_pizzeria_crud.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -31,6 +33,7 @@ public class Ingredient {
 
   // Pizze di riferimento
   @ManyToMany(mappedBy = "ingredienti", cascade = { CascadeType.REMOVE })
+  @JsonBackReference  // Evita il problema di ridondanza di dati in JSON
   private List<Pizza> pizze;
 
   // Getters & Setters

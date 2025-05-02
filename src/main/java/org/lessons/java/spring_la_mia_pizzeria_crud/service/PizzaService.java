@@ -62,5 +62,10 @@ public class PizzaService {
 
     pizzaRepository.delete(pizza);
   }
+
+  // DELETE BY ID
+  public void deleteById(Integer id) {
+    pizzaRepository.deleteById(id);
+  }
   
 }

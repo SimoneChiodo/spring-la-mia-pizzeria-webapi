@@ -2,6 +2,8 @@ package org.lessons.java.spring_la_mia_pizzeria_crud.model;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,6 +27,7 @@ public class Discount {
   // Pizza da cui dipende lo sconto
   @ManyToOne
   @JoinColumn(name = "pizza_id")
+  @JsonBackReference  // Evita il problema di ridondanza di dati in JSON
   private Pizza pizza;
 
   @NotBlank(message = "Il nome non può essere vuoto")

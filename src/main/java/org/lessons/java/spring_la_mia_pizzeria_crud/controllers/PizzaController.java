@@ -20,7 +20,7 @@ import java.util.List;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
-@RequestMapping("/")
+@RequestMapping("/pizza")
 public class PizzaController {
   
   // @Autowired
@@ -31,14 +31,8 @@ public class PizzaController {
   @Autowired
   private IngredientRepository ingredientRepository;
 
-  // HOME
-  @GetMapping()
-  public String index() {
-      return "index";
-  }
-  
   // GET
-  @GetMapping("/pizza")
+  @GetMapping()
   public String pizza(Model model) {
     List<Pizza> pizze = pizzaService.findAll(); 
 
@@ -48,7 +42,7 @@ public class PizzaController {
   }
 
   // SHOW
-  @GetMapping("/pizza/{id}")
+  @GetMapping("/{id}")
   public String show(@PathVariable("id") Integer id, Model model) {
     Pizza pizza = pizzaService.findById(id); 
     
@@ -58,7 +52,7 @@ public class PizzaController {
   }
   
   // SEARCH
-  @GetMapping("/pizza/search")
+  @GetMapping("/search")
   public String search(@RequestParam(name = "title") String title, Model model) {
     List<Pizza> pizze = pizzaService.findByTitle(title); 
     
@@ -68,7 +62,7 @@ public class PizzaController {
   }
 
   // CREATE
-  @GetMapping("/pizza/create")
+  @GetMapping("/create")
   public String create(Model model) {
     Pizza pizza = new Pizza(); 
 
@@ -84,7 +78,7 @@ public class PizzaController {
   }
 
   // STORE
-  @PostMapping("/pizza/create")
+  @PostMapping("/create")
   public String store(@Valid @ModelAttribute("pizza") Pizza formPizza, BindingResult bindingResult, Model model) {
     if (bindingResult.hasErrors()) {
       return "pizza/create"; // Se ci sono errori, torno alla pagina di creazione
@@ -97,7 +91,7 @@ public class PizzaController {
   }
 
   // EDIT
-  @GetMapping("/pizza/edit/{id}")
+  @GetMapping("/edit/{id}")
   public String edit(@PathVariable Integer id, Model model) {
     Pizza pizza = pizzaService.findById(id); 
 
@@ -111,7 +105,7 @@ public class PizzaController {
   }
   
   // UPDATE
-  @PostMapping("/pizza/edit/{id}")
+  @PostMapping("/edit/{id}")
   public String update(@Valid @ModelAttribute("pizza") Pizza formPizza, BindingResult bindingResult, Model model) {
     if (bindingResult.hasErrors()) {
       return "pizza/edit"; // Se ci sono errori, torno alla pagina di modifica
@@ -125,7 +119,7 @@ public class PizzaController {
   }
 
   // DELETE
-  @PostMapping("/pizza/delete/{id}")
+  @PostMapping("/delete/{id}")
   public String delete(@PathVariable Integer id) {
     Pizza pizza = pizzaService.findById(id);
 
@@ -135,7 +129,7 @@ public class PizzaController {
   }
 
   // DISCOUNT CREATE 
-  @GetMapping("/pizza/{id}/discount")
+  @GetMapping("/{id}/discount")
   public String sconto(@PathVariable Integer id, Model model) {
     Discount sconto = new Discount(); // Creo un nuovo oggetto sconto
     Pizza pizza = pizzaService.findById(id); 
