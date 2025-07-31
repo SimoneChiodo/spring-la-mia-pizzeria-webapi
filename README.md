@@ -1,17 +1,15 @@
-Dobbiamo realizzare un’applicazione web che ci aiuti a gestire la nostra pizzeria.
+# Esercizio Java: Pizzeria WebAPI
 
-# Giorno 5
+### Continuo della repository spring-la-mia-pizzeria-relazioni
 
-Implementiamo l'accesso alla nostra applicazione anche all’esterno, esponiamo degli endpoint REST!
+## Descrizione
 
-Implementiamo quindi i metodi CRUD tramite RestController.
+Il progetto complessivo consiste nello sviluppo di un’applicazione web per la gestione di una pizzeria, che permette di gestire pizze, offerte speciali e ingredienti, con funzionalità complete di CRUD (creazione, lettura, aggiornamento, cancellazione) sia tramite interfaccia grafica che API REST.
 
-Diamo la possibilità di :
+L’applicazione prevede diverse pagine principali: una lista delle pizze con possibilità di filtro per nome, la visualizzazione dettagliata di ogni singola pizza, e pagine per la creazione, modifica e cancellazione delle pizze. Ogni pizza include informazioni come id, nome, descrizione, foto e prezzo, con validazioni per i dati inseriti.
 
-- ottenere la lista di pizze (dobbiamo anche poterle filtrare per titolo)
-- leggere i dettagli di una singola pizza
-- creare una nuova pizza
-- modificare una pizza esistente
-- cancellare una pizza
+Sono implementate funzionalità avanzate come la gestione delle offerte speciali legate alle pizze, che hanno una data di inizio, una data di fine e un titolo, visualizzabili nella pagina dettagliata della pizza con possibilità di aggiungere e modificare offerte.
 
-Queste operazioni devono poter essere eseguite tramite PostMan, non preoccupiamoci quindi della parte di frontend per ora.
+Inoltre, è prevista la gestione degli ingredienti, che possono essere associati a più pizze (e viceversa), con pagine dedicate per elencare, creare e cancellare ingredienti e per associarli alle pizze durante la creazione o modifica.
+
+Infine, è stata aggiunta l’esposizione di endpoint REST per tutte le operazioni CRUD sulle pizze, permettendo di interagire con il backend tramite strumenti come Postman, garantendo così anche un accesso programmabile e un’integrazione possibile con altre applicazioni.
